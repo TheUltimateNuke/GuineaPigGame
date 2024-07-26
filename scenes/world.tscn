@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://sorv4vr3n3cb"]
+
+[ext_resource type="PackedScene" uid="uid://df15modp4o3ol" path="res://scenes/entities/guinea_pig.tscn" id="1_bwj07"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nynpk"]
+size = Vector2(1500, 100)
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_mv63e"]
+vertices = PackedVector2Array(197, 315, -182, 315, -180, 184, 197, 177)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-192, 325, 207, 325, 207, 167, -190, 175)])
+source_geometry_group_name = &"navigation_polygon_source_group"
+
+[node name="World" type="Node2D"]
+
+[node name="GuineaPig" parent="." instance=ExtResource("1_bwj07")]
+position = Vector2(0, 264)
+
+[node name="Camera2D" type="Camera2D" parent="GuineaPig"]
+position_smoothing_enabled = true
+
+[node name="Floor" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+position = Vector2(0, 376)
+shape = SubResource("RectangleShape2D_nynpk")
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_mv63e")

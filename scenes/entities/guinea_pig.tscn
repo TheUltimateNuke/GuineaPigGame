@@ -1,0 +1,54 @@
+[gd_scene load_steps=8 format=3 uid="uid://df15modp4o3ol"]
+
+[ext_resource type="Script" path="res://scripts/state/state_machine.gd" id="2_bs8tu"]
+[ext_resource type="Script" path="res://scripts/state/entities/ai/guinea_pig/guinea_pig_wander_state.gd" id="2_tog4n"]
+[ext_resource type="Script" path="res://scripts/component/entities/gravity_component.gd" id="4_lyq6l"]
+[ext_resource type="Script" path="res://scripts/component/entities/move_and_slide_component.gd" id="4_qwwv5"]
+[ext_resource type="Script" path="res://scripts/component/entities/movement_component.gd" id="5_8p7bl"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_t2c6n"]
+size = Vector2(32, 16)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_21jsn"]
+radius = 8.0
+height = 32.0
+
+[node name="GuineaPig" type="CharacterBody2D"]
+
+[node name="DirectionFlip" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite2D" parent="DirectionFlip"]
+texture = SubResource("PlaceholderTexture2D_t2c6n")
+
+[node name="Collider" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_21jsn")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+avoidance_enabled = true
+debug_enabled = true
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_bs8tu")
+initial_state = NodePath("Wander")
+
+[node name="Wander" type="Node" parent="StateMachine" node_paths=PackedStringArray("movement_component", "nav_agent")]
+script = ExtResource("2_tog4n")
+movement_component = NodePath("../../MovementComponent")
+nav_agent = NodePath("../../NavigationAgent2D")
+wander_radius = 10.0
+
+[node name="GravComponent" type="Node" parent="." node_paths=PackedStringArray("body")]
+script = ExtResource("4_lyq6l")
+body = NodePath("..")
+
+[node name="MoveAndSlideComponent" type="Node" parent="." node_paths=PackedStringArray("body")]
+script = ExtResource("4_qwwv5")
+body = NodePath("..")
+
+[node name="MovementComponent" type="Node" parent="." node_paths=PackedStringArray("body", "collider", "nav_agent")]
+script = ExtResource("5_8p7bl")
+body = NodePath("..")
+collider = NodePath("../Collider")
+nav_agent = NodePath("../NavigationAgent2D")
+jump_velocity = 200.0
